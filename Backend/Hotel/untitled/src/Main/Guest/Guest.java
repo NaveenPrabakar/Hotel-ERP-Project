@@ -1,17 +1,21 @@
 package Main.Guest;
 
-import Main.Room.room;
+import Main.Booking.Reservation;
 
-public class Guest implements GuestInterface {
+public class Guest {
+    private String name;
+    private int id;
 
-
-    @Override
-    public boolean checkIn(room room) {
-        return false;
+    public Guest(String name, int id){
+        this.name = name;
+        this.id = id;
     }
 
-    @Override
-    public boolean checkOut(room room) {
-        return false;
+    public String getName(){
+        return name;
+    }
+
+    public int getid(){
+        return id;
     }
 }

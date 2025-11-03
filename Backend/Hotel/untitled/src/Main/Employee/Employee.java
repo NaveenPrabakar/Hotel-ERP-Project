@@ -1,11 +1,11 @@
 package Main.Employee;
 
-public class employee {
+public class Employee {
     private int StaffID;
     private String name;
     private String role;
 
-    public employee(int StaffID, String name, String role){
+    public Employee(int StaffID, String name, String role){
         this.StaffID = StaffID;
         this.name = name;
         this.role = role;
@@ -15,11 +15,11 @@ public class employee {
         return StaffID;
     }
 
-    private String getName(){
+    public String getName(){
         return name;
     }
 
-    private String role() {
+    public String role() {
         return role;
     }
 }
