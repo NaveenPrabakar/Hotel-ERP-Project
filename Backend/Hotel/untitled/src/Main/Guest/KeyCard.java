@@ -1,6 +1,8 @@
 package Main.Guest;
 
-public class KeyCard {
+import Main.Room.room;
+
+public class KeyCard implements KeyCardInterface {
 
     private int roomnumber;
     Boolean status;
