@@ -1,3 +1,4 @@
 reservationId,guestName,roomNumber,startDate,endDate,actualCheckOutDate
 79a6d1a3-ec1d-442e-b50c-aa7536355992,Nick W,101,2025-11-04,2025-11-05,2025-11-04
 63a9667b-0845-4f6d-abe6-1ccac1037342,n w,102,2025-11-04,2025-11-05,2025-11-04
+3c591723-1dd8-4b97-ae91-b81bc1c757c0,Naveen Prabakar,101,2025-11-05,2025-11-07,2025-11-05

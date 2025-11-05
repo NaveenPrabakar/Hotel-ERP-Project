@@ -51,7 +51,6 @@ public class Main {
 
             if(choice.equals("1")){
                 Booking.handleBooking();
-                break;
             }
             else if(choice.equals("2")) {
                 System.out.println("Check In option selected.");
@@ -66,11 +65,10 @@ public class Main {
                 }
 
                 CheckSystemController.RunCheckin(frontDesk);
-                break;
+
             }
             else if(choice.equals("6")) {
                 handleRoomAccess(sc);
-                break;
             }
             else if (choice.equals("3")) {
                 System.out.println("Check Out option selected.");
@@ -86,13 +84,17 @@ public class Main {
 
                 // Call the checkout system
                 CheckSystemController.RunCheckOut(frontDesk);
+            }
+            else if(choice.equals("0")){
                 break;
             }
-
-
+            else{
+                System.out.println("That's not an option try again");
+                continue;
+            }
             if (running) {
                 System.out.println("\nPress Enter to return to main menu...");
-                sc.nextLine();
+                String enter = sc.nextLine();
             }
 
         }
