@@ -15,13 +15,14 @@ import java.io.IOException;
 public class frontdeskteam extends Employee implements FrontDesk{
 
     //access to the Guest Database
-    private static String GUESTS = "src/Main/Guest.txt";
+    private static String GUESTS = "Backend/Hotel/untitled/src/Main/Guest.txt";
 
     //access to reservation Database
-    private static final String RESERVATION = "src/Main/Reservation.txt";
+    private static final String RESERVATION = "Backend/Hotel/untitled/src/Main/Reservation.txt";
+
 
     //access to keycard Database
-    private static final String KEYCARD = "src/Main/Keycard.txt";
+    private static final String KEYCARD = "Backend/Hotel/untitled/src/Main/Keycard.txt";
 
     public frontdeskteam(int id, String name) {
         super(id, name, "FrontDesk");
@@ -72,9 +73,9 @@ public class frontdeskteam extends Employee implements FrontDesk{
             Scanner scnr = new Scanner(file);
 
             while(scnr.hasNextLine()){
-                String[] profile = scnr.nextLine().split(" ");
-                String name = profile[0] + " " + profile[1];
-                int id = Integer.parseInt(profile[2]);
+                String[] profile = scnr.nextLine().split(",");
+                String name = profile[0];
+                int id = Integer.parseInt(profile[1]);
 
                 if(guest.getName().equals(name) && guest.getid() == id){
                     return true;
