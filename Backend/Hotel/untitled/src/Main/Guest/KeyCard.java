@@ -3,9 +3,9 @@ package Main.Guest;
 public class KeyCard {
 
     private int roomnumber;
-    Boolean status;
+    boolean status;
     Guest owner;
-    public KeyCard(int roomnumber, Boolean status, Guest owner){
+    public KeyCard(int roomnumber, boolean status, Guest owner){
         this.roomnumber = roomnumber;
         this.status = status;
         this.owner = owner;
@@ -15,7 +15,7 @@ public class KeyCard {
         return roomnumber;
     }
 
-    public Boolean getStatus(){
+    public boolean getStatus(){
         return status;
     }
 

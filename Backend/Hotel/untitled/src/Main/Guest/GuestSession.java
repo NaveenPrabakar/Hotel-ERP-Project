@@ -42,6 +42,8 @@ public class GuestSession implements CheckingProcess {
 
     @Override
     public void checkout(Employee frontdesk) {
+        //will checkout at some point add it to the clean queue
+
 
     }
 }

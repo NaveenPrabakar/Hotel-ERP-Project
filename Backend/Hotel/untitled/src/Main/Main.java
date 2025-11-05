@@ -34,7 +34,7 @@ public class Main {
                 employees.add(new frontdeskteam(id, name));
             }
             else if (position.equals("Cleaner")){
-                employees.add(new cleaningstaffteam(id, name));
+                employees.add(new Housekeeping(id, name));
             }
 
         }
@@ -63,6 +63,8 @@ public class Main {
 
                 CheckSystemController.RunCheckin(frontDesk);
                 break;
+            } else if (choice.equals('3')) {
+
             }
 
             if (running) {
