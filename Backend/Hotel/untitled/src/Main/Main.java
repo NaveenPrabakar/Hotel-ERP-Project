@@ -46,7 +46,7 @@ public class Main {
         while (running) {
             printMenu();
 
-            System.out.print("\nSelect an option (1–5) or 0 to exit: ");
+            System.out.print("\nSelect an option (1–6) or 0 to exit: ");
             String choice = sc.nextLine().trim();
 
             if(choice.equals("1")){
