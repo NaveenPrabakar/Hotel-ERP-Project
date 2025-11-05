@@ -46,4 +46,6 @@ public class KeyCard {
     public String toString(){
         return roomnumber + " " + status + " " + owner.getName();
     }
+
+    public String addToPastToString() { return roomnumber + " " + owner.getName();}
 }
