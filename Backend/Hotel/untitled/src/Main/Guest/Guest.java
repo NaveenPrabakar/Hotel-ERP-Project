@@ -1,6 +1,6 @@
 package Main.Guest;
 
-import Main.Booking.Reservation;
+import Main.Room.room;
 
 public class Guest {
     private String name;
