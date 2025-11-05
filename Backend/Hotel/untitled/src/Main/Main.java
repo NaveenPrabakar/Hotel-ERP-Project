@@ -129,17 +129,35 @@ public class Main {
 
         void execute() {
             System.out.println("===== ROOM ACCESS AUTHENTICATION =====");
+            List<KeyCard> issuedCards = loadIssuedKeyCards();
+            if (issuedCards.isEmpty()) {
+                System.out.println("No key cards are currently issued. Please visit the front desk.");
+                return;
+            }
 
-            System.out.print("Guest name: ");
-            String guestName = input.nextLine().trim();
-
-            System.out.print("Guest id (press Enter if unknown): ");
-            int guestId = parseNumber(input.nextLine().trim());
+            System.out.println("Key cards on file:");
+            for (KeyCard card : issuedCards) {
+                System.out.println("  Room " + card.getRoomnumber() + " -> " + card.getOwner().getName());
+            }
 
             System.out.print("Room number: ");
             int roomNumber = parseNumber(input.nextLine().trim());
 
-            Guest guest = new Guest(guestName, guestId);
+            System.out.print("Name on key card: ");
+            String guestName = input.nextLine().trim();
+
+            if (roomNumber <= 0 || guestName.isEmpty()) {
+                System.out.println("Access denied: incomplete information provided.");
+                System.out.println("Indicator flashes red. Please contact the front desk.");
+                return;
+            }
+
+            Optional<KeyCard> keyCard = findMatchingCard(issuedCards, roomNumber, guestName);
+            if (keyCard.isEmpty()) {
+                System.out.println(RoomAccessResult.INVALID_GUEST.getMessage());
+                System.out.println("Indicator flashes red. Please contact the front desk.");
+                return;
+            }
 
             Optional<room> targetRoom = loadRoom(roomNumber);
             if (targetRoom.isEmpty()) {
@@ -148,12 +166,7 @@ public class Main {
                 return;
             }
 
-            Optional<KeyCard> keyCard = findKeyCardFor(guest, roomNumber);
-            if (keyCard.isEmpty()) {
-                System.out.println(RoomAccessResult.SYSTEM_ERROR.getMessage());
-                System.out.println("Please request assistance at the front desk.");
-                return;
-            }
+            Guest guest = new Guest(guestName, -1);
 
             RoomAccessResult result = guest.scanKeyCard(keyCard.get(), targetRoom.get());
             System.out.println(result.getMessage());
@@ -174,10 +187,11 @@ public class Main {
             }
         }
 
-        private Optional<KeyCard> findKeyCardFor(Guest guest, int roomNumber) {
+        private List<KeyCard> loadIssuedKeyCards() {
             File source = resolveDataFile("Keycard.txt");
+            List<KeyCard> cards = new ArrayList<>();
             if (!source.exists()) {
-                return Optional.empty();
+                return cards;
             }
 
             try (Scanner scanner = new Scanner(source)) {
@@ -192,25 +206,33 @@ public class Main {
                     }
 
                     int recordedRoom = parseNumber(tokens[0]);
-                    boolean isActive = Boolean.parseBoolean(tokens[1]);
-                    String ownerName = rebuildName(tokens);
-
-                    if (recordedRoom != roomNumber) {
+                    if (recordedRoom <= 0) {
                         continue;
                     }
 
-                    Guest owner = new Guest(ownerName, -1);
-                    KeyCard card = new KeyCard(recordedRoom, isActive, owner);
-
-                    if (guest.matches(owner)) {
-                        return Optional.of(card);
+                    boolean isActive = Boolean.parseBoolean(tokens[1]);
+                    String ownerName = rebuildName(tokens);
+                    if (ownerName.isEmpty()) {
+                        continue;
                     }
+
+                    cards.add(new KeyCard(recordedRoom, isActive, new Guest(ownerName, -1)));
                 }
             } catch (FileNotFoundException e) {
-                return Optional.empty();
+                cards.clear();
             }
 
-            return Optional.empty();
+            return cards;
+        }
+
+        private Optional<KeyCard> findMatchingCard(List<KeyCard> cards, int roomNumber, String guestName) {
+            KeyCard match = null;
+            for (KeyCard card : cards) {
+                if (card.getRoomnumber() == roomNumber && card.getOwner().getName().equalsIgnoreCase(guestName)) {
+                    match = card;
+                }
+            }
+            return Optional.ofNullable(match);
         }
 
         private Optional<room> loadRoom(int roomNumber) {
@@ -255,11 +277,22 @@ public class Main {
         }
 
         private File resolveDataFile(String fileName) {
-            File rooted = new File(DATA_ROOT + fileName);
-            if (rooted.exists()) {
-                return rooted;
+            String[] prefixes = {
+                    "",
+                    DATA_ROOT,
+                    FALLBACK_ROOT,
+                    "Backend/Hotel/untitled/",
+                    "Backend/Hotel/"
+            };
+
+            for (String prefix : prefixes) {
+                File candidate = prefix.isEmpty() ? new File(fileName) : new File(prefix + fileName);
+                if (candidate.exists()) {
+                    return candidate;
+                }
             }
-            return new File(FALLBACK_ROOT + fileName);
+
+            return new File(DATA_ROOT + fileName);
         }
 
         private int parseNumber(String value) {
