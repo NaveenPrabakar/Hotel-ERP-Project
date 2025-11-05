@@ -2,7 +2,7 @@ package Main.Guest;
 
 import Main.Room.room;
 
-public class KeyCard {
+public class KeyCard implements KeyCardInterface {
 
     private int roomnumber;
     Boolean status;

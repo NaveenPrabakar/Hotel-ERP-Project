@@ -19,7 +19,7 @@ public class Guest {
         return id;
     }
 
-    public RoomAccessResult scanKeyCard(KeyCard keyCard, room targetRoom) {
+    public RoomAccessResult scanKeyCard(KeyCardInterface keyCard, room targetRoom) {
         if (keyCard == null) {
             return RoomAccessResult.SYSTEM_ERROR;
         }
