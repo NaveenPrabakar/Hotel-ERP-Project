@@ -68,14 +68,12 @@ public class GuestSession implements CheckingProcess {
 
         Guest guest = new Guest(name, id);
 
-        // Verify identity
         boolean verified = ((FrontDesk) frontDesk).verifyIdentity(guest);
         if (!verified) {
             System.out.println("Hmm, I’m not finding a match with that name and ID. Could you double-check them for me?");
             return;
         }
 
-        // Attempt checkout
         boolean checkedOut = ((FrontDesk) frontDesk).verifyCheckOut(guest);
         if (checkedOut) {
             System.out.println("Alright, " + guest.getName() + ", I found your reservation.");

@@ -4,7 +4,7 @@ import Main.Guest.Guest;
 
 import java.time.LocalDate;
 
-public class room implements RoomInterface {
+public class room extends Hotel implements RoomInterface {
     private int roomNumber;
     private String type;
     private String availability; // "Available" or "Reserved"
@@ -12,7 +12,8 @@ public class room implements RoomInterface {
     private LocalDate endDate;   // YYYY-MM-DD or "null"
     private boolean locked;
 
-    public room(int roomNumber, String type, String availability, LocalDate  startDate, LocalDate  endDate) {
+    public room(String address, int roomNumber, String type, String availability, LocalDate  startDate, LocalDate  endDate) {
+        super(address);
         this.roomNumber = roomNumber;
         this.type = type;
         this.availability = availability;
@@ -26,7 +27,7 @@ public class room implements RoomInterface {
         int number = Integer.parseInt(parts[0]);
         LocalDate start = parts[3].equals("null") ? null : LocalDate.parse(parts[3]);
         LocalDate end = parts[4].equals("null") ? null : LocalDate.parse(parts[4]);
-        return new room(number, parts[1], parts[2], start, end);
+        return new room(null, number, parts[1], parts[2], start, end);
     }
 
     public int getRoomNumber() { return roomNumber; }

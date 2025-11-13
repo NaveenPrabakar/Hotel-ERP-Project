@@ -4,20 +4,58 @@ import Main.Room.room;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
+import Main.*;
 
 public class Booking implements BookingInterface {
 
-    private static final String ROOM_FILE = "Room.txt";
-    private static final String RESERVATION_FILE = "Reservation.txt";
-    private static final String GUEST_FILE = "Guest.txt";
+    private static String ROOM_FILE = Main.HOTEL_PATH+ "/" + "Room.txt";
+    private static String RESERVATION_FILE = Main.HOTEL_PATH+ "/" + "Reservation.txt";
+    private static String GUEST_FILE = Main.HOTEL_PATH+ "/" +"Guest.txt";
 
     // ===================== MAIN MENU =====================
     public static void handleBooking() {
-        Booking bookingSystem = new Booking();
         Scanner sc = new Scanner(System.in);
 
-        while (true) {
-            System.out.println("\n===== HOTEL BOOKING SYSTEM =====");
+        // STEP 1: Hardcoded list of supported hotel cities
+        List<String> hotelCities = new ArrayList<>();
+        hotelCities.add("Chicago");
+        hotelCities.add("DesMoines");
+
+        System.out.println("\n===== SELECT HOTEL LOCATION =====");
+        for (int i = 0; i < hotelCities.size(); i++) {
+            System.out.println((i + 1) + ". " + hotelCities.get(i));
+        }
+
+        System.out.print("Select your city: ");
+        int cityChoice;
+        try {
+            cityChoice = Integer.parseInt(sc.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Returning to menu.");
+            return;
+        }
+
+        if (cityChoice < 1 || cityChoice > hotelCities.size()) {
+            System.out.println("Invalid city selection. Returning to menu.");
+            return;
+        }
+
+        String selectedCity = hotelCities.get(cityChoice - 1);
+        Main.HOTEL_PATH = selectedCity;
+
+        ROOM_FILE = Main.HOTEL_PATH+ "/" + "Room.txt";
+        RESERVATION_FILE = Main.HOTEL_PATH+ "/" + "Reservation.txt";
+        GUEST_FILE = Main.HOTEL_PATH+ "/" +"Guest.txt";
+
+
+        System.out.println("📍 Selected hotel: " + selectedCity);
+
+        // STEP 3: Proceed with booking flow for that location
+        Booking bookingSystem = new Booking();
+        boolean running = true;
+
+        while (running) {
+            System.out.println("\n===== HOTEL BOOKING SYSTEM (" + selectedCity + ") =====");
             System.out.println("1. Book a Room");
             System.out.println("2. Modify a Reservation");
             System.out.println("3. Cancel a Reservation");
@@ -25,18 +63,21 @@ public class Booking implements BookingInterface {
             System.out.print("Select an option: ");
 
             String choice = sc.nextLine();
-            switch (choice) {
-                case "1" -> bookingSystem.bookRoomFlow();
-                case "2" -> bookingSystem.modifyReservationFlow();
-                case "3" -> bookingSystem.cancelReservationFlow();
-                case "4" -> {
-                    System.out.println("Goodbye!");
-                    return;
-                }
-                default -> System.out.println("Invalid choice. Please try again.");
+            if (choice.equals("1")) {
+                bookingSystem.bookRoomFlow();
+            } else if (choice.equals("2")) {
+                bookingSystem.modifyReservationFlow();
+            } else if (choice.equals("3")) {
+                bookingSystem.cancelReservationFlow();
+            } else if (choice.equals("4")) {
+                System.out.println("Returning to main menu...");
+                running = false;
+            } else {
+                System.out.println("Invalid choice. Please try again.");
             }
         }
     }
+
 
     // ===================== BOOK FLOW =====================
     private void bookRoomFlow() {
@@ -241,7 +282,7 @@ public class Booking implements BookingInterface {
                 int roomNumber = Integer.parseInt(parts[0]);
                 String type = parts[1];
                 if (isRoomAvailable(roomNumber, requestedStart, requestedEnd)) {
-                    availableRooms.add(new room(roomNumber, type, "Available", null, null));
+                    availableRooms.add(new room(null, roomNumber, type, "Available", null, null));
                 }
             }
         } catch (IOException e) {
